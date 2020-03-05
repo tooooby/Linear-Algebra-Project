@@ -1,1 +1,1 @@
-# main.py with nothing for now, current just to test gitup sync
+# main.py with nothing for now, currently just to test gitup sync
