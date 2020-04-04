@@ -19,24 +19,23 @@ class InverseCalculator:
         return self.determinate(InverseCalculator.delete(curr_matrix, r, c))
 
     def cofactor(self, r, c, curr_matrix):
+        # offset of 1 on r is needed to match mathmatical formula
         return (-1)**(r+1+c) * self.minor(r, c, curr_matrix)
 
-    #def minor_helper(self, r, c, siz):
-
     def determinate(self, curr_matrix = np.matrix("")):
+        # using parameter default to set initial matrix
         if (curr_matrix.size == 0):
             curr_matrix = self.np_matrix
+        # base case
         if (curr_matrix.size == 4):
             # ad - bc
             return (curr_matrix.item((0,0)) * curr_matrix.item((1,1)) -
                    curr_matrix.item((0,1)) * curr_matrix.item((1,0)))
         det = 0
-        # sumation formula
+        # summation formula
         for i in range(0, curr_matrix[0].size):
             det = det + (curr_matrix.item(i, 0)) * self.cofactor(i, 0, curr_matrix)
         return det
-
-    # def determinate_helper(self, curr_matrix):
 
 
     # delete row r and col c using numpy.delete, indexing starting at 0 i.e.
