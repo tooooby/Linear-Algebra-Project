@@ -12,7 +12,6 @@ class InverseCalculator:
         self.np_matrix = np.matrix(imatrix)
         self.size = self.np_matrix.size
         self.n = self.np_matrix[0].size
-        #print(self.n, "\n")
 
     # returns the minor of the current matrix given a row and column
     def minor(self, r, c, curr_matrix):
