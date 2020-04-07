@@ -12,14 +12,19 @@ class InverseCalculator:
         self.np_matrix = np.matrix(imatrix)
         self.size = self.np_matrix.size
         self.n = self.np_matrix[0].size
-
+        self.determinates = {}
     # returns the minor of the current matrix given a row and column
     def minor(self, r, c, curr_matrix):
-        return self.determinate(InverseCalculator.delete(curr_matrix, r, c))
+        sub_matrix = InverseCalculator.delete(curr_matrix, r, c)
+        # use a hash table to store already calculated determinates
+        if (str(sub_matrix) in self.determinates):
+            return self.determinates[str(sub_matrix)]
+        sub_det = self.determinate(sub_matrix)
+        self.determinates[str(sub_matrix)] = sub_det
+        return sub_det
 
     def cofactor(self, r, c, curr_matrix):
-        # offset of 1 on r is needed to match mathmatical formula
-        return (-1)**(r+1+c) * self.minor(r, c, curr_matrix)
+        return (-1)**(r+c) * self.minor(r, c, curr_matrix)
 
     def determinate(self, curr_matrix = np.matrix("")):
         # using parameter default to set initial matrix
