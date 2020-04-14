@@ -1,14 +1,5 @@
 import numpy as np
 
-# Inverse Helper Functions
-
-def cancel_diagonal(m, im):
-    for j in range(m[0].size):
-        c = m[j, j]
-        m[j, j] = 1
-        im[j] = im[j] / c
-    return (m, im)
-
 class InverseCalculator:
     """
     Matrix class for computing the determinate of a maxtrix. Uses numpy's matrix
@@ -19,11 +10,12 @@ class InverseCalculator:
     # numpy matrix
     def __init__(self, imatrix):
         self.np_matrix = np.matrix(imatrix)
-        self.size = self.np_matrix.size
         self.n = self.np_matrix[0].size
-        self.upper_m = self.np_matrix # keep track of the original matrix
+        self.size = self.np_matrix.size
+        self.upper_m = self.np_matrix.astype(float) # keep track of the original matrix
         self.upper_ops = []
         self.lower_mi = np.identity(self.n)
+        self.det = 1
         self.upper()
         self.upper_mi = np.identity(self.n)
 
@@ -32,21 +24,32 @@ class InverseCalculator:
     def upper(self):
         for j in range(0, self.n - 1):
             for i in range(j + 1, self.n):
+                # if the current item in the diagonal is zero, need to find the
+                # first non-zero item in the col below it, and add the row it's
+                # in to this row
+                if (self.upper_m[j, j] == 0):
+                    complete = False
+                    for k in range(j+1, self.n):
+                        if (self.upper_m[k, j] != 0):
+                            self.upper_m[j] = self.upper_m[j] + self.upper_m[k]
+                            self.lower_mi[j] = self.lower_mi[j] + self.lower_mi[k]
+                            break
+                        complete = True
+                    if (complete):
+                        print("no inverse")
+                        break
                 # find what needs to be subtracted to get zero in row,col below
                 m = self.upper_m[i, j] / self.upper_m[j, j]
-                # add operation in array formatted [multiplyer, R1, R2]
-                self.upper_ops.append([m, j, i])
-                #actually perform the operation
+
+                # do the operation
                 self.upper_m[i] = self.upper_m[i] - m * self.upper_m[j]
                 self.lower_mi[i] = self.lower_mi[i] - m * self.lower_mi[j]
 
     # multiple diagonal of upper matrix
     def determinate(self):
-        det = 1
         for j in range(self.n):
-            det = det * self.upper_m[j, j]
-        return det
-
+            self.det = self.det * self.upper_m[j, j]
+        return self.det
 
     def upper_inverse(self):
         for j in range(self.n - 1, 0, -1):
@@ -62,13 +65,11 @@ class InverseCalculator:
 
 
     def inverse(self):
-        if (self.determinate() == 0): # will compute upper()
+        if (self.determinate() == 0):
             print("Matrix not invertable, determinate = 0")
             return -1
         self.upper_inverse()
         return np.dot(self.upper_mi, self.lower_mi)
-
-
 
 
     # delete row r and col c using numpy.delete, indexing starting at 0 i.e.
