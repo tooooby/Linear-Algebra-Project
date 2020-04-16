@@ -10,4 +10,4 @@ Basic matrix inverse calculator in Python for Julia, Edge, Alex, Koby and Toby's
 Simply download the project files and run in terminal or python3 IDLE:
 `python3 main.py`
 
-You could also use the InverseCalculator class in you're own project file. [main.py](../main.py) displays how to do this.
+You could also use the InverseCalculator class in you're own project file. [main.py](./main.py) displays how to do this.
